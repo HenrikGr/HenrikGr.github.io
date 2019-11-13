@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{w2l6:function(e,t,a){"use strict";a.r(t);var o=a("q1tI"),n=a.n(o),r=a("hlFM"),l=a("kKAo"),c=a("ofer"),i=a("aDnJ");t.default=function(e){var t=e.location;return n.a.createElement(i.a,{title:"Home of modern software development",location:t},n.a.createElement(r.a,{clone:!0,pt:16,pr:2,pb:2,pl:2},n.a.createElement(l.a,{elevation:0},n.a.createElement(c.a,{variant:"h5",color:"error"},"You hit a page that does not exist"))))}}}]);
+//# sourceMappingURL=component---src-pages-404-js-4bafb7da3308a8e0a6e6.js.map
