@@ -82,11 +82,10 @@ Workers can be. The main goal of Workers is to improve the performance on CPU-in
   </a>
     </span></p>
 <h1>Example of usage</h1>
-<p>In our example we have an external service that can be "considered" having CPU intensive calculations, it is a Rest API
+<p>In my example I have an external service that can be "considered" having CPU intensive calculations, it is a Rest API
 endpoint built to enable long polling and can after 15 seconds require the client to make a new request. If 15 seconds
-has been reached the service responds with a status 204.</p>
-<p>In my example, I also use a worker thread to access the database in order to store the event data from the external
-services and this can be considered overkill but I wanted to test and play a little with worker threads. </p>
+has been reached the service responds with a status 204. The external services will in normal cases respond with event
+data from trot races with a start and finish event and id plus time for any horse in the race.</p>
 <p>The external service will respond with event data for start time and finnish time for horses in trot races:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Start data</span>
 <span class="token punctuation">{</span>
@@ -131,8 +130,8 @@ server<span class="token punctuation">.</span><span class="token function">liste
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 module<span class="token punctuation">.</span>exports <span class="token operator">=</span> server<span class="token punctuation">;</span></code></pre></div>
-<p>The module responsible for all communication between the main thread and the worker threads looks like this.
-The module exports only on function, run, which is an asynchronous function that starts everything. </p>
+<p>The module responsible for all communication between the main thread and the worker threads exports only one
+async function, called run and in this little experiment it starts everything.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// .server/services/index.js</span>
 
 <span class="token comment">/**
@@ -160,20 +159,22 @@ The module exports only on function, run, which is an asynchronous function that
 
   <span class="token comment">/**
    * Listening on feedback messages from the subscriberWorker
-   * The subscriberWorker has two message it sends
+   * The subscriberWorker has two message it sends to the main thread
    * - 'subscribe' - means that it wants the main thread to start a new subscription
    * - 'save' - means it has received event data that should be saved.
    */</span>
   subscribeWorker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token parameter">incoming</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// destructure incoming message to read status</span>
+    <span class="token comment">// and possible data related to the status</span>
     <span class="token keyword">const</span> <span class="token punctuation">{</span> status<span class="token punctuation">,</span> data <span class="token punctuation">}</span> <span class="token operator">=</span> incoming
     
-    <span class="token comment">// Message to start a new subscription</span>
     <span class="token keyword">if</span><span class="token punctuation">(</span> status <span class="token operator">===</span> <span class="token string">'subscribe'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// send a message and tell the subscriberWorker to re-start  </span>
       subscribeWorker<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token string">'subscribe'</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
 
-    <span class="token comment">// Message to save event data</span>
     <span class="token keyword">if</span><span class="token punctuation">(</span> status <span class="token operator">===</span> <span class="token string">'save'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// send a message to the dbWorker to save the data</span>
       dbWorker<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>status<span class="token punctuation">:</span> <span class="token string">'save'</span><span class="token punctuation">,</span> data<span class="token punctuation">:</span> data<span class="token punctuation">}</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
 
@@ -214,6 +215,7 @@ The module exports only on function, run, which is an asynchronous function that
 module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> <span class="token function">runService</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
+<p>The implementation of the subscriberWorker:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// .server/services/subscribeWorker.js</span>
 
 <span class="token comment">/**
@@ -257,12 +259,15 @@ parentPort<span class="token punctuation">.</span><span class="token function">o
     parentPort<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>status<span class="token punctuation">:</span> <span class="token string">'save'</span><span class="token punctuation">,</span> data<span class="token punctuation">:</span> data<span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre></div>
+<p>The implementation of the dbWorker:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// .server/services/dbWorker.js</span>
 
 <span class="token comment">/**
  * Database worker thread module
  */</span>
-<span class="token keyword">const</span> <span class="token punctuation">{</span> parentPort <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"worker_threads"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> parentPort <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"worker_threads"</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Mongoose stuff</span>
 <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../config'</span><span class="token punctuation">)</span>
 <span class="token keyword">const</span> mongoose <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"mongoose"</span><span class="token punctuation">)</span>
 <span class="token keyword">const</span> Schema <span class="token operator">=</span> mongoose<span class="token punctuation">.</span>Schema<span class="token punctuation">;</span>
@@ -312,7 +317,8 @@ parentPort<span class="token punctuation">.</span><span class="token function">o
  * @returns {Promise&lt;void>}
  */</span>
 <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">saveData</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"start saving"</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+  
+  <span class="token comment">// save data</span>
   <span class="token keyword">const</span> document <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Model</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
   <span class="token keyword">await</span> document<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -320,8 +326,9 @@ parentPort<span class="token punctuation">.</span><span class="token function">o
   parentPort<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span> status<span class="token punctuation">:</span> <span class="token string">"subscribe"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span></code></pre></div>
 <h1>Summary</h1>
-<p>It was really fun to experiment with worker threads and I can think it will be used quiet often especially in the
-following use cases:</p>
+<p>It was really fun to experiment with worker threads and I think it will be used quiet often but, use it with care because
+I think postMessage API can bli slow in itself, however, that may have changed today.</p>
+<p>Possible uses cases?</p>
 <ul>
 <li>Serializing to JSON large responses to API requests, such as those resulting from GraphQL or objection.js relation
 graph queries</li>
