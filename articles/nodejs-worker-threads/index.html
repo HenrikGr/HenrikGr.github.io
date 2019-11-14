@@ -47,37 +47,6 @@ Workers can be. The main goal of Workers is to improve the performance on CPU-in
 <li>One JS Engine Instance per thread</li>
 <li>One Node.js Instance per thread</li>
 </ol>
-<p><span
-      class="gatsby-resp-image-wrapper"
-      style="position: relative; display: block; margin-left: auto; margin-right: auto; margin:16px; max-width: 600px;"
-    >
-      <a
-    class="gatsby-resp-image-link"
-    href="/static/283834c0555b38103ed90d824c6f5994/d7d8f/worker-diagram_2x__1_.jpg"
-    style="display: block"
-    target="_blank"
-    rel="noopener"
-  >
-    <span
-    class="gatsby-resp-image-background-image"
-    style="padding-bottom: 53.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3bQB/8QAFxAAAwEAAAAAAAAAAAAAAAAAAREgIv/aAAgBAQABBQJ6JU//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//xAAVEAEBAAAAAAAAAAAAAAAAAAARIP/aAAgBAQAGPwIr/8QAGhAAAgIDAAAAAAAAAAAAAAAAAAERMRBBYf/aAAgBAQABPyGHSJEWFRseP//aAAwDAQACAAMAAAAQgM//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/ED//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/ED//xAAcEAEAAgMAAwAAAAAAAAAAAAABACERMVEQYZH/2gAIAQEAAT8QQNcltfyEDlfBYhCaTM69QCX4/9k='); background-size: cover; display: block;"
-  ></span>
-  <img
-        class="gatsby-resp-image-image"
-        alt="Standard process"
-        title="Image"
-        src="/static/283834c0555b38103ed90d824c6f5994/82472/worker-diagram_2x__1_.jpg"
-        srcset="/static/283834c0555b38103ed90d824c6f5994/5aa83/worker-diagram_2x__1_.jpg 150w,
-/static/283834c0555b38103ed90d824c6f5994/afcd2/worker-diagram_2x__1_.jpg 300w,
-/static/283834c0555b38103ed90d824c6f5994/82472/worker-diagram_2x__1_.jpg 600w,
-/static/283834c0555b38103ed90d824c6f5994/2d017/worker-diagram_2x__1_.jpg 900w,
-/static/283834c0555b38103ed90d824c6f5994/c35de/worker-diagram_2x__1_.jpg 1200w,
-/static/283834c0555b38103ed90d824c6f5994/d7d8f/worker-diagram_2x__1_.jpg 2400w"
-        sizes="(max-width: 600px) 100vw, 600px"
-        loading="lazy"
-      />
-  </a>
-    </span></p>
 <h1>Experiment</h1>
 <p>In my example I have an external service that can be "considered" having CPU intensive calculations, it is a Rest API
 endpoint built to enable long polling and can after 15 seconds require the client to make a new request. If 15 seconds
