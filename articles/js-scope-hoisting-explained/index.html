@@ -256,7 +256,7 @@ with a value. After declaring and initializing, we can access or reassign the va
 </tr>
 </tbody>
 </table>
-<p>The <strong>var</strong> keyword hoisting and as seen below, if we tries to use a variable before it has been declared and
+<p>The <strong>var</strong> keyword hoisting, and as seen below, if we tries to use a variable before it has been declared and
 initialized, it will return undefined</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to use a variable before declaring it</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token comment">// undefined</span>
@@ -270,7 +270,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 
 <span class="token comment">// Variable assignment without var</span>
 name <span class="token operator">=</span> <span class="token number">100</span></code></pre></div>
-<p>The reason for this is due to hoisting, a behavior of JavaScript in which variable and function declarations are moved
+<p>The reason for this is due to hoisting, a behavior of JavaScript in which variable AND function declarations are moved
 to the top of their scope. Since only the actual declaration is hoisted, not the initialization, the value in the first
 example returns undefined.</p>
 <p>Another example to iterate and make it clearer.</p>
@@ -308,7 +308,7 @@ variable assignment is not hoisted, and neither is function assignment. </p>
 <p>As a reminder, this is a function assignment: </p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> <span class="token function-variable function">myFunction</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></code></pre></div>
 <p>Here is a basic example to demonstrate:</p>
-<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"> <span class="token comment">// Both the variable and the function are named myName</span>
+<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Both the variable and the function are named myName</span>
 <span class="token keyword">var</span> myName<span class="token punctuation">;</span> 
 <span class="token keyword">function</span> <span class="token function">myName</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Henrik"</span><span class="token punctuation">)</span>
