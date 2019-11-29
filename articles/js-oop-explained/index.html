@@ -10,17 +10,14 @@ interface may differ, and </li>
 </ul>
 <p>In this article, we are concerned with only <strong>Inheritance</strong> and <strong>Encapsulation</strong> since only these two concepts apply to
 OOP in JavaScript, particularly because in JavaScript, objects can encapsulate functionality and inherit methods and
-properties from other objects. In the rest of the article, I will try to cover most how to using objects in JavaScript
-in an object oriented manner, with inheritance and encapsulation, to reuse code and abstract functionality into
-specialized objects.</p>
+properties from other objects. </p>
 <blockquote>
 <p>This article does not cover ES6 new class keyword for OOP in JavaScript, that is another article coming soon.</p>
 </blockquote>
-<h1>Encapsulation and Inheritance Overview</h1>
+<h1>Encapsulation and Inheritance</h1>
 <p> Objects can be thought of as the main actors in an application, or simply the main “things” or building blocks that do
 all the work. As you know by now, objects are everywhere in JavaScript since every component in JavaScript is an Object,
 including Functions, Strings, and Numbers. We normally use object literals, or the constructor functions to create objects.</p>
-<p>In ES6 we do have the class keyword as well, which is not covered in this article. </p>
 <p><strong>Encapsulation</strong> refers to enclosing all the functionality of an object within that object so that the object’s internal
 workings, its methods and properties, are hidden from the rest of the application. This allows us to abstract or
 localize specific set of functionality on objects.</p>
@@ -34,11 +31,11 @@ For example:</p>
 <span class="token comment">// we will use new keyword to invoke it.</span>
 <span class="token keyword">function</span> <span class="token function">Tree</span><span class="token punctuation">(</span><span class="token parameter">typeOfTree</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> 
 
-<span class="token comment">// bananaTree is an instance of Tree.</span>
-<span class="token keyword">const</span> bananaTree <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Tree</span> <span class="token punctuation">(</span><span class="token string">"banana"</span><span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<p>In the preceding example, bananaTree is an object that was created from the Tree constructor function or using. We say that the
-bananaTree object is an instance of the Tree object. Tree is both an object and a function, because functions are
-objects in JavaScript. bananaTree can have its own methods and properties and inherit methods and properties from the
+<span class="token comment">// appleTree is an instance of Tree.</span>
+<span class="token keyword">const</span> appleTree <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Tree</span><span class="token punctuation">(</span><span class="token string">"apple"</span><span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>In the preceding example, appleTree is an object that was created from the Tree constructor function or using. We say
+that the appleTree object is an instance of the Tree object. Tree is both an object and a function, because functions are
+objects in JavaScript. appleTree can have its own methods and properties and inherit methods and properties from the
 Tree object, as we will discuss in detail when we study inheritance below.</p>
 <h1>OOP in JavaScript</h1>
 <p>The two important principles with OOP in JavaScript are Object Creation patterns (Encapsulation), and Code Reuse
@@ -74,7 +71,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>henrikGr<span class="token punctuation">.</span>profession<span class="token punctuation">)</span>  <span class="token comment">// Software Developer</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>In the latter example, we use a custom constructor function to create an object. This is how we create objects when we
 want to add methods and properties on our objects, and when we want to encapsulate functionality on our objects.
-JavaScript developers have invented many patterns (or ways) for creating objects with constructor functions. And when we
+JavaScript developers have invented many patterns for creating objects with constructor functions. And when we
 say <strong>Object Creation Patterns</strong>, we are concerned principally with the many ways of creating objects from constructor
 functions, as in the preceding example.</p>
 <p>In addition to the patterns for creating objects, you want to reuse code efficiently. When you create your objects, you
@@ -84,18 +81,14 @@ inheritance.</p>
 <p>These two universal principles—creating objects (especially from constructor Functions) and allowing objects to inherit
 properties and methods—are the main focus of this article and, indeed, the main concepts with OOP in JavaScript.</p>
 <h1>Encapsulation in JavaScript</h1>
-<p>As discussed above, one of the main principles with OOP is encapsulation: put all the inner workings of an object inside
-that object. To implement encapsulation in JavaScript, we have to define the core methods and properties on that object.
-To do this, we will use the a pattern for encapsulation in JavaScript: the <strong>Combination Constructor/Prototype Pattern</strong>.
-This name is a mouthful, but you do not need memorize it, since we are only concerned with its implementation. Before we
-implement it, let’s quickly learn a bit more about the practicality of encapsulation.</p>
+<p>To implement encapsulation in JavaScript, we have to define the core methods and properties on that object.
+Before we implement it, let’s quickly learn a bit more about the practicality of encapsulation.</p>
 <p>Why Encapsulation?
 When you simply want to create an object just to store some data, and it is the only object of its kind, you can use an
 object literal and create your object. This is quite common and you will use this simple pattern often.</p>
 <p>However, whenever you want to create objects with similar functionality, to use the same methods and properties, you
 encapsulate the main functionality in a Function and you use that Function’s constructor to create the objects. This is
-the essence of encapsulation, and it is this need for encapsulation that we are concerned with and why we are using the
-Combination Constructor/Prototype Pattern.</p>
+the essence of encapsulation, and it is this need for encapsulation that we are concerned with.</p>
 <p>To make practical use of OOP in JavaScript, we will build an object-oriented quiz application that uses all the
 principles and techniques we learn in this article. First up, our quiz application will have users (a Users Function)
 who take the quiz. There will be some common properties for every user who takes the quiz: each user will have a name,
@@ -105,9 +98,8 @@ the object.</p>
 <p>Because we want ALL the user objects to have these same properties and methods, we cannot use the object literal way of
 creating objects. We have to use a constructor Function to encapsulate these properties and methods.</p>
 <p>Since we know all users will have the same set of properties, it makes sense to create a Function, Class in OOP
-languages, that encapsulates these properties and methods. Thus, we will use the Combination Constructor/Prototype
-Pattern for this.</p>
-<h2>Implementation of Combination Constructor/Prototype Pattern</h2>
+languages, that encapsulates these properties and methods.</p>
+<h2>Implementation of encapsulation</h2>
 <p>The User Function:</p>
 <div class="gatsby-highlight has-highlighted-lines" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">User</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span> email</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 <span class="gatsby-highlight-code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name</span><span class="gatsby-highlight-code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span>email <span class="token operator">=</span> email</span><span class="gatsby-highlight-code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span>quizScores <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span></span><span class="gatsby-highlight-code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span>currentScore <span class="token operator">=</span> <span class="token number">0</span></span><span class="token punctuation">}</span>
@@ -127,7 +119,6 @@ firstUser<span class="token punctuation">.</span><span class="token function">sh
 secondUser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"Lars"</span><span class="token punctuation">,</span> <span class="token string">"lars@examnple.com"</span><span class="token punctuation">)</span>
 secondUser<span class="token punctuation">.</span><span class="token function">saveScore</span><span class="token punctuation">(</span><span class="token number">18</span><span class="token punctuation">)</span>
 secondUser<span class="token punctuation">.</span><span class="token function">showNameAndScores</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">//Lars Scores: 18</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<h3>Explanation of Combination Constructor/Prototype Pattern</h3>
 <p>Let’s expound on each line of code so we have a thorough understanding of this pattern.</p>
 <p>The lines 2-5 initialize the instance properties. These properties will be defined on each User instance that is
 created. So the values will be different for each user. The use of the this keyword inside the function specifies that
@@ -221,16 +212,20 @@ DragDropQuestion. Overriding functions is another principle of OOP.</p>
 <h2>Implementing Inheritance</h2>
 <p>To implement inheritance we have to use two techniques specifically for inheritance in JavaScript.</p>
 <ul>
-<li>creating children objects</li>
+<li>creating children objects that inherits from a parent</li>
 <li>overriding methods</li>
 </ul>
 <h3>Creating children</h3>
-<p>Creating our quiz OOP style, lets go ahead and implement our Question constructor first. This can be thought of as a super
-class for Questions.</p>
-<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// The Question function is the parent for all </span>
-<span class="token comment">// other question objects;</span>
-<span class="token comment">// All question objects will inherit from this </span>
-<span class="token comment">// Question constructor</span>
+<p>Creating our quiz OOP style, lets go ahead and implement our Question constructor first. This can be thought of as a
+super class for Questions.</p>
+<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">/**
+ * Question constructor
+ * All question objects will inherit from this
+ * @param theQuestion
+ * @param theChoices
+ * @param theCorrectAnswer
+ * @constructor
+ */</span>
 <span class="token keyword">function</span> <span class="token function">Question</span><span class="token punctuation">(</span><span class="token parameter">theQuestion<span class="token punctuation">,</span> theChoices<span class="token punctuation">,</span> theCorrectAnswer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// Initialize the instance properties</span>
   <span class="token keyword">this</span><span class="token punctuation">.</span>question <span class="token operator">=</span> theQuestion<span class="token punctuation">;</span>
@@ -254,7 +249,7 @@ class for Questions.</p>
 
   <span class="token comment">// A confirmation message that the question was created</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Quiz Created On: "</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getQuizDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>Next, we are adding prototype methods to the Question objects, all instances of the Question object will inherit these
 methods, because we are adding the methods on the Question prototype.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Define the prototype methods that will be inherited</span>
@@ -280,15 +275,21 @@ methods, because we are adding the methods on the Question prototype.</p>
 <p>Now that we have the Question constructor object setup, we can inherit from it and create sub classes (children objects).
 The power of inheritance is that we can create all sorts of questions now, and each can be quite versatile.</p>
 <p>Now we are creating the Multiple Choice Question:</p>
-<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Create the MultipleChoiceQuestion</span>
+<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">/**
+ * MultipleChoiceQuestion constructor
+ * For MultipleChoiceQuestion to properly inherit from Question,
+ * here inside the MultipleChoiceQuestion constructor, we have to
+ * explicitly call the Question constructor
+ * passing MultipleChoiceQuestion as the this object, and the parameters
+ * we want to use in the Question constructor:
+ * @param theQuestion
+ * @param theChoices
+ * @param theCorrectAnswer
+ * @constructor
+ */</span>
 <span class="token keyword">function</span> <span class="token function">MultipleChoiceQuestion</span><span class="token punctuation">(</span><span class="token parameter">theQuestion<span class="token punctuation">,</span> theChoices<span class="token punctuation">,</span> theCorrectAnswer</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-  <span class="token comment">// For MultipleChoiceQuestion to properly inherit from Question, </span>
-  <span class="token comment">// here inside the MultipleChoiceQuestion constructor, we have to </span>
-  <span class="token comment">// explicitly call the Question constructor</span>
-  <span class="token comment">// passing MultipleChoiceQuestion as the this object, and the parameters </span>
-  <span class="token comment">// we want to use in the Question constructor:</span>
   <span class="token function">Question</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> theQuestion<span class="token punctuation">,</span> theChoices<span class="token punctuation">,</span> theCorrectAnswer<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>And then we have to inherit the prototype object from Question:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// inherit the methods and properties from Question</span>
 <span class="token class-name">MultipleChoiceQuestion</span><span class="token punctuation">.</span>prototype <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token class-name">Question</span><span class="token punctuation">.</span>prototype<span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span></span></pre></div>
@@ -298,25 +299,42 @@ a new MultipleQuestion object it will also call the parent constructor first.</p
 when we inherited the parent's prototype, we lost the constructor:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token class-name">MultipleChoiceQuestion</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>constructor <span class="token operator">=</span> MultipleChoiceQuestion<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span></span></pre></div>
 <p>In a similar manner, we can make yet another type of question, the drag and drop question:</p>
-<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Create the DragDropQuestion</span>
+<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">/**
+ * DragDropQuestion constructor
+ * For DragDropQuestion to properly inherit from Question,
+ * here inside the DragDropQuestion constructor, we have to
+ * explicitly call the Question constructor
+ * passing DragDropQuestion as the this object, and the parameters
+ * we want to use in the Question constructor:
+ * @param theQuestion
+ * @param theChoices
+ * @param theCorrectAnswer
+ * @constructor
+ */</span>
 <span class="token keyword">function</span> <span class="token function">DragDropQuestion</span><span class="token punctuation">(</span><span class="token parameter">theQuestion<span class="token punctuation">,</span> theChoices<span class="token punctuation">,</span> theCorrectAnswer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token function">Question</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> theQuestion<span class="token punctuation">,</span> theChoices<span class="token punctuation">,</span> theCorrectAnswer<span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment">// inherit the methods and properties from Question</span>
 <span class="token class-name">DragDropQuestion</span><span class="token punctuation">.</span>prototype <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token class-name">Question</span><span class="token punctuation">.</span>prototype<span class="token punctuation">)</span>
-<span class="token comment">// Re-assign the constructor </span>
-<span class="token class-name">DragDropQuestion</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>constructor <span class="token operator">=</span> DragDropQuestion<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<span class="token comment">// Re-assign the constructor</span>
+<span class="token class-name">DragDropQuestion</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>constructor <span class="token operator">=</span> DragDropQuestion</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <h3>Overriding Methods</h3>
 <p>Overriding methods is a another principle of OOP, and we can do it easily with this pattern. Since the Drag and
 Drop questions will have a different HTML layout from the Multiple Choice questions (no radio buttons, for example),
 we can override the displayQuestion method so it operates specifically to the Drag and Drop question needs:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Override the displayQuestion method it inherited</span>
 <span class="token class-name">DragDropQuestion</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">displayQuestion</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// Just return the question. Drag and Drop implementation </span>
-  <span class="token comment">// detail is beyond this article</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>question<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+  <span class="token keyword">let</span> questionToDisplay <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>question
+  <span class="token keyword">let</span> choiceCounter <span class="token operator">=</span> <span class="token number">0</span>
+
+  <span class="token keyword">this</span><span class="token punctuation">.</span>choices<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">eachChoice</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+    questionToDisplay <span class="token operator">+=</span> <span class="token string">'&lt;div>'</span> <span class="token operator">+</span> eachChoice <span class="token operator">+</span> <span class="token string">'&lt;/div>'</span>
+    choiceCounter<span class="token operator">++</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'html: '</span><span class="token punctuation">,</span> questionToDisplay<span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>In our real Quiz application, we would create a Quiz constructor that is the main application that launches the quiz,
 but in this article, we can test our inheritance code by simply doing this:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Initialize some questions and add them to an array</span>
