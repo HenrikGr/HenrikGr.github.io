@@ -5,17 +5,18 @@ A big part of that is the ability to take different actions based on what the us
 Lazy loading images is another great example — no need to load something and risk a performance hit if the user never
 gets to see it anyway.</p>
 <p>While those are the most common practices used today there are many other use cases that depend on the business logic of
-your application. For example, you may want a simple animation to occur when an element enter the browser's viewport.</p>
+your application. For example, you may want a simple animation to occur when an element enter the browser's viewport to
+demo the Intersection API.</p>
 <h1>The Intersection Observer</h1>
 <p>The Intersection Observer API allows us to watch a certain element and run a callback when its visibility changes in
 relation to the view port or another element.</p>
-<p>You can specify an intersection ratio to tell the Intersection Observer what percentage of your element needs to be
+<p>We can specify an intersection ratio to tell the Intersection Observer what percentage of your element needs to be
 visible in order to trigger the callback. This must be a value between 0 and 1.</p>
 <p>Another configuration option that needs to be specified when you initialise the Intersection Observer is the root. This
 is the element in relevance to which we will be watching for intersections. Most of the time this will be the full view
 port which means that we need to pass null as a value.</p>
-<p>Here’s how we can initialise an Intersection Observer which will run a callback every time our target is intersecting
-in the view port.</p>
+<p>We can initialise an Intersection Observer which will run a callback every time our target is intersecting
+in the view port as this:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Create and initialize an observer  </span>
 <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntersectionObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>entry<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token comment">// is run when DOMElement match the thresholds</span>
@@ -30,8 +31,9 @@ in the view port.</p>
 observer<span class="token punctuation">.</span><span class="token function">observe</span><span class="token punctuation">(</span>DOMElement<span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>To specify the element that we actually want to watch we need to use the observe method and pass it a DOM element.</p>
 <p>When an element that meets the threshold requirements and enters the view port it will run the callback provided when
-the Intersection Observer was initialised and it will pass the callback an array of entries. </p>
-<p>Each element in the array passed to the callback has the following properties:</p>
+the Intersection Observer was initialised and it will pass the callback an array of entries. In the code above we are
+only interested in the first element.</p>
+<p>Each element in the array passed to the callback has the following shape:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token keyword">let</span> <span class="token function-variable function">callback</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">entries<span class="token punctuation">,</span> observer</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span> 
   entries<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">entry</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
     <span class="token comment">// Each entry describes an intersection change for one observed</span>
@@ -46,13 +48,14 @@ the Intersection Observer was initialised and it will pass the callback an array
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>In our example below, we are going to use the intersectionRatio property to get the intersection percentage and use that
-to animate the opacity of an element that is entering the viewport. Since we implement the observer in the element itself
-we need only the first member of the array.</p>
+to animate the opacity or width of an element that is entering the viewport. Since we implement the observer in the
+element itself we need only the first member of the array.</p>
 <h1>Intersection in React</h1>
 <p>How do we use the Intersection Observer in an application built with React? Let us first creating our boxes that
 this demo are going to use: </p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token keyword">import</span> styled <span class="token keyword">from</span> <span class="token string">"styled-components"</span><span class="token punctuation">;</span>
 
+<span class="token comment">// Generic box styles</span>
 <span class="token keyword">const</span> Box <span class="token operator">=</span> styled<span class="token punctuation">.</span>div<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
   position: relative;
   background-color: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> backgroundColor <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> backgroundColor <span class="token operator">||</span> <span class="token string">"black"</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
@@ -65,18 +68,19 @@ this demo are going to use: </p>
   min-height: 40vh;
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
+<span class="token comment">// FadeBox</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> FadeBox <span class="token operator">=</span> <span class="token function">styled</span><span class="token punctuation">(</span>Box<span class="token punctuation">)</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
   opacity: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> ratio <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> ratio <span class="token operator">||</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
   width: 50%;
 </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
+<span class="token comment">// WidthBox</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> WidthBox <span class="token operator">=</span> <span class="token function">styled</span><span class="token punctuation">(</span>Box<span class="token punctuation">)</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
   width: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> ratio <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>ratio <span class="token operator">*</span> <span class="token number">100</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">%</span><span class="token template-punctuation string">`</span></span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;
-</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>We are using styled-components and define two simple boxes, FadeBox and WidthBox, both of them allows us to dynamically
-change their styles with a ration property.</p>
-<p>Then we are going to create an intersection box, that will render either the WidthBox or the FadeBox. Lets start with
-implementing the intersection box.</p>
+change their styles with a ratio property to create some animation effect.</p>
+<p>Lets create an intersection box, that will render either the WidthBox or the FadeBox:</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">'react'</span>
 
 <span class="token comment">// Import the two boxes</span>
@@ -88,7 +92,7 @@ implementing the intersection box.</p>
 <span class="token comment">/**
  * Box using intersection API to alter the styles
  * of the rendered boxes when the boxes enter the viewport
- * @param boxType
+ * @param {number} boxType - number that match the index of the compToRender array
  * @param rest
  * @returns {*}
  * @constructor
@@ -99,14 +103,14 @@ implementing the intersection box.</p>
 
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
     <span class="token operator">&lt;</span>Component <span class="token punctuation">{</span><span class="token operator">...</span>rest<span class="token punctuation">}</span> <span class="token operator">></span>
-      intersectionRatio<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token function">format</span><span class="token punctuation">(</span>entry<span class="token punctuation">.</span>intersectionRatio<span class="token punctuation">)</span><span class="token punctuation">}</span>
+      <span class="token operator">...</span>
     <span class="token operator">&lt;</span><span class="token operator">/</span>Component<span class="token operator">></span>
   <span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> IntersectBox</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<p>In my last article, I wrote about Refs in React and now we need that feature in order to tell the Observer we are going
-to create which DOM element to observe.</p>
+<p>In my last article, I wrote about Refs in React and now we need that feature in order to tell the Intersection Observer
+we are going to create to start observe our DOM element.</p>
 <div class="gatsby-highlight has-highlighted-lines" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Use React's hook useRef to hold a </span>
 <span class="token comment">// reference to a DOM element</span>
 <span class="gatsby-highlight-code-line"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'react'</span></span>
@@ -131,17 +135,18 @@ to create which DOM element to observe.</p>
   <span class="token keyword">const</span> Component <span class="token operator">=</span> compToRender<span class="token punctuation">[</span>boxType<span class="token punctuation">]</span>
 
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
-<span class="gatsby-highlight-code-line">    <span class="token operator">&lt;</span>Component ref<span class="token operator">=</span><span class="token punctuation">{</span>targetRef<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token operator">...</span>rest<span class="token punctuation">}</span> <span class="token operator">></span></span>      intersectionRatio<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token function">format</span><span class="token punctuation">(</span>entry<span class="token punctuation">.</span>intersectionRatio<span class="token punctuation">)</span><span class="token punctuation">}</span>
+<span class="gatsby-highlight-code-line">    <span class="token operator">&lt;</span>Component ref<span class="token operator">=</span><span class="token punctuation">{</span>targetRef<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token operator">...</span>rest<span class="token punctuation">}</span> <span class="token operator">></span></span>      <span class="token operator">...</span>
     <span class="token operator">&lt;</span><span class="token operator">/</span>Component<span class="token operator">></span>
   <span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> IntersectBox</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<p>Next, we need to add the Intersection Observer and to do that we can use React's hook useEffect. The useEffect hook
+<p>Next, we need to add the Intersection Observer and to do that we can use React's useEffect hook. The useEffect hook
 lets us perform side effects in our function component. The useEffect hook is designed to run after every render of the
 component and we can use it to create and initialize our Intersection Observer logic.</p>
 <p>It's also important to know that the useEffect hook has a dependency array we can pass into the hook itself and if the
-dependencies are the same as the last time it was executed, it will not run again.</p>
+dependencies are the same as the last time it was executed, it will not run again. it seems perfect to pass a ref to
+the target DOM Element as a dependency. </p>
 <blockquote>
 <p>It's important to know that React doing a shallow match when checking if the dependencies array has changed or not.</p>
 </blockquote>
