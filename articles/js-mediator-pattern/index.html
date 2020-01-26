@@ -10,10 +10,9 @@ first wrote about it in his book, 'Best When it Counts'.</p>
 <p>As a young aspiring Tennis player, I read that book many times and realized it takes time and a lot of practice  to get
 Ivan Lendl's smashing forehand or Mats Wilander's ability to foresee the next move. I was born with John McEnroe's
 temperament so everything I needed to do was practice. :-)</p>
-<p>As a self employed consultant, I have no goal to be a top sales manager, I don't want to be the really good in
-marketing either, however, I want to always stay on top when it comes to software development and want to improve my
-communication skills. </p>
-<p>Anyway, I spend a lot of time training software development and I love it. </p>
+<p>As a self employed consultant, I have no goal to be a top sales person, I don't want to mastering marketing either,
+however, I want to always stay on top when it comes to software development and want to improve my communication skills. </p>
+<p>That's wy I'm writing articles about my training and I spend a lot of time training and love it. </p>
 <p>In this article I choose to write about a quiet complex pattern that I can never train enough on - the mediator pattern. </p>
 <h1>The mediator pattern</h1>
 <p>The Mediator pattern provides central authority over a group of objects by encapsulating how these objects interact.
@@ -23,34 +22,35 @@ of any state change in any other object in the group.</p>
 to make a flight reservation. A simple Mediator rule would be: you must enter a valid departure date, a valid return
 date, the return date must be after the departure date, a valid departure airport, a valid arrival airport,
 a valid number of travelers, and only then the Search button can be activated.</p>
-<p>Another example of Mediator is that of a chat room controlling messages send and received between participants. </p>
+<p>Another example of Mediator is that of a chat room controlling messages sent and received between participants. </p>
 <h1>Chat room example</h1>
-<p>In the example code we have four participants that are joining in a chat session by registering with a chat room
+<p>In the example code we have four participants that are joining a chat session by registering with a chat room
 (the Mediator). Each participant is represented by a Participant object. Participants send messages to each other and
-the ChatRoom handles the routing.</p>
+the ChatRoom handles the routing logic.</p>
 <p>The chat room;</p>
 <ul>
-<li>defines an interface for communicating with Participant objects</li>
-<li>maintains references to Participant objects</li>
-<li>manages central control over operations for sending and receiving messages</li>
+<li>defines an interface for communicating with Participant objects,</li>
+<li>maintains references to Participant objects,</li>
+<li>manages central control over operations for sending and receiving messages.</li>
 </ul>
 <p>The participants;</p>
 <ul>
-<li>objects that are being mediated by the Mediator</li>
-<li>each instance maintains a reference to the Mediator</li>
-<li>in this demo, stores received messages to the mediator logger store to keep history of all messages sent</li>
+<li>objects that are being mediated by the Mediator,</li>
+<li>each instance maintains a reference to the Mediator,</li>
+<li>in this demo, stores received messages to the mediator logger store to keep history of all messages sent.</li>
 </ul>
 <p>First we set up the code for the participants.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">/*
- * These symbols are used to represent properties that should not be part of
- * the public interface. You could also use ES2019 private fields, but those
+ * These symbols are used to represent own properties that should not be part of
+ * the public interface. We can however choose to do so by getters and setters.
+ * You could also use ES2019 private fields, but those
  * are not yet widely available as of the time of my writing.
  */</span>
 <span class="token keyword">const</span> participantName <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">'participantName'</span><span class="token punctuation">)</span>
 <span class="token keyword">const</span> chatRoom <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">'chatRoom'</span><span class="token punctuation">)</span>
 
 <span class="token comment">/**
- * Participants send messages to each
+ * Participants class - send and receive messages from other participants
  */</span>
 <span class="token keyword">class</span> <span class="token class-name">Participant</span> <span class="token punctuation">{</span>
   <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -58,9 +58,8 @@ the ChatRoom handles the routing.</p>
      * Name of the participant
      */</span>
     <span class="token keyword">this</span><span class="token punctuation">[</span>participantName<span class="token punctuation">]</span> <span class="token operator">=</span> name
-
     <span class="token comment">/**
-     * Reference to the chat room - is set after registration
+     * Reference to the chat room - is set after registration to a chat room
      */</span>
     <span class="token keyword">this</span><span class="token punctuation">[</span>chatRoom<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">null</span>
   <span class="token punctuation">}</span>
@@ -91,22 +90,23 @@ the ChatRoom handles the routing.</p>
   <span class="token punctuation">}</span>
 
   <span class="token comment">/**
-   * Receive message from the chatRoom - is called in the route logic of the chatRoom object
+   * Receive message from the chatRoom - is delegated to the chatRoom object
    * @param {string} message - message
    * @param {Participant} sender - participant object that sent the message
    * @remarks Store the received message in the chat room logger for this demo.
    */</span>
   <span class="token function">receive</span><span class="token punctuation">(</span><span class="token parameter">message<span class="token punctuation">,</span> sender</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Store the message in the chat room logger store in this demo</span>
     <span class="token keyword">this</span><span class="token punctuation">[</span>chatRoom<span class="token punctuation">]</span><span class="token punctuation">.</span>logger <span class="token operator">=</span> sender<span class="token punctuation">.</span>participantName <span class="token operator">+</span> <span class="token string">' to '</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>participantName <span class="token operator">+</span> <span class="token string">': '</span> <span class="token operator">+</span> message
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<p>The participant object is a very simple example that have an interface containing a property setter to set the chat room,
-a property getter to get the name of the participant and public methods to send and receive messages.</p>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>The participant object is simple and have an interface containing a property setter to set the chat room,
+a property getter to get the name of the participant and public methods to send and receive messages. The
+receive method is delegated to the chat room and the send method invokes the send method of the chat room.</p>
 <p>Now, lets create the code for the chat room.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">/*
- * These symbols are used to represent properties that should not be part of
- * the public interface. You could also use ES2019 private fields, but those
+ * These symbols are used to represent own properties that should not be part of
+ * the public interface. We can however choose to do so by getters and setters.
+ * You could also use ES2019 private fields, but those
  * are not yet widely available as of the time of my writing.
  */</span>
 <span class="token keyword">const</span> room <span class="token operator">=</span> <span class="token function">Symbol</span><span class="token punctuation">(</span><span class="token string">'room'</span><span class="token punctuation">)</span>
@@ -181,9 +181,9 @@ a property getter to get the name of the participant and public methods to send 
       receiver<span class="token punctuation">.</span><span class="token function">receive</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span> sender<span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>The mediator, the chat room class, is a little more complex and have a property setter to update the internal logger
-store with a history of all messages send and public methods, getLog() to get all messages from the logger store,
+store with a history of all messages sent and public methods, getLog() to get all messages from the logger store,
 register() to register a participant for the chat room and a send() method that is responsible for the routing logic
 between all participants.</p>
 <p>Lets test this, here come a small example og how to use it.</p>
@@ -224,7 +224,8 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">//  'Paul to Yoko: Ha, I heard that!' + '\n' +</span>
 <span class="token comment">//  'Paul to John: Ha, I heard that!' + '\n' +</span>
 <span class="token comment">//  'Paul to Ringo: Ha, I heard that!' + '\n' +</span>
-<span class="token comment">//  'Ringo to Paul: Paul, what do you think?' + '\n'</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div></div><div class="MuiBox-root jss111"><hr class="MuiDivider-root"/></div><h6 class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary">Published: <!-- -->2020-01-25</h6><h6 class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary">PublishedBy: <!-- -->Henrik Grönvall</h6></div></div></div><div role="presentation" class="jss118" style="transform:scale(0);visibility:hidden"><button class="MuiButtonBase-root MuiFab-root MuiFab-secondary" tabindex="0" type="button" aria-label="scroll back to top"><span class="MuiFab-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg></span></button></div><div class="MuiBox-root jss130 jss129"><h6 class="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom MuiTypography-alignCenter">Henrik Grönvall</h6><p class="MuiTypography-root MuiTypography-body2 MuiTypography-colorInherit MuiTypography-alignCenter">Copyright © <!-- -->2020<!-- --> <a class="MuiTypography-root MuiLink-root MuiLink-underlineNone MuiTypography-colorInherit" href="/">Henrik Grönvall Consulting AB</a> <!-- -->.</p></div></div></div><script>
+<span class="token comment">//  'Ringo to Paul: Paul, what do you think?' + '\n'</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>That's it for no.</p></div><div class="MuiBox-root jss111"><hr class="MuiDivider-root"/></div><h6 class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary">Published: <!-- -->2020-01-25</h6><h6 class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary">PublishedBy: <!-- -->Henrik Grönvall</h6></div></div></div><div role="presentation" class="jss118" style="transform:scale(0);visibility:hidden"><button class="MuiButtonBase-root MuiFab-root MuiFab-secondary" tabindex="0" type="button" aria-label="scroll back to top"><span class="MuiFab-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg></span></button></div><div class="MuiBox-root jss130 jss129"><h6 class="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom MuiTypography-alignCenter">Henrik Grönvall</h6><p class="MuiTypography-root MuiTypography-body2 MuiTypography-colorInherit MuiTypography-alignCenter">Copyright © <!-- -->2020<!-- --> <a class="MuiTypography-root MuiLink-root MuiLink-underlineNone MuiTypography-colorInherit" href="/">Henrik Grönvall Consulting AB</a> <!-- -->.</p></div></div></div><script>
   
   
   if(true) {
