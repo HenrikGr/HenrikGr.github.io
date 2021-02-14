@@ -1,3 +1,0 @@
-/*! For license information please see component---src-pages-404-js-4772ab3e3e19ba739653.js.LICENSE.txt */
-(window.webpackJsonp=window.webpackJsonp||[]).push([[7],{w2l6:function(e,a,t){"use strict";t.r(a);var n=t("q1tI"),o=t.n(n),i=t("hlFM"),r=t("ofer"),l=t("aDnJ"),c=t("IAH9");a.default=function(e){var a=e.location,t=e.navigate,n=Object(c.a)();return o.a.createElement(o.a.Fragment,null,o.a.createElement(l.a,{title:"Page was not found",siteMeta:n,location:a,navigate:t}),o.a.createElement(i.a,{clone:!0,pt:16,pr:2,pb:2,pl:2},o.a.createElement(r.a,{variant:"h5",color:"inherit"},"You hit a page that does not exist")))}}}]);
-//# sourceMappingURL=component---src-pages-404-js-4772ab3e3e19ba739653.js.map
