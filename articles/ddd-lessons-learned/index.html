@@ -147,9 +147,15 @@ do and when it’s allowed to do it.</p>
 <h2>The case for DDD and domain model first</h2>
 <p>In DDD, we can from a declarative perspective, design the business rules that answer what and when
 something can be done which make it much more readable, flexible and expressive.</p>
-<p>If we were to take our previous example and using DDD, the controller code would probably look
-something like this:</p>
-<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">MovieController</span> <span class="token punctuation">{</span>
+<p>If we were to take our previous example and introduce some concepts from DDD, we are using Movie and Customer entity
+objects, containing business rules to perform magic and, in an even better architecture, we would let our controller
+inherit from a BaseController containing an abstract method which we can use to implement all logic in a use case
+object instead and let the controller only manage the request and response cycle. Next article will most surely cover
+this abstraction.</p>
+<div class="gatsby-highlight" data-language="javascript"><pre style="counter-reset: linenumber NaN" class="language-javascript line-numbers"><code class="language-javascript"><span class="token comment">// Entity objects that contain business rules</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Movie<span class="token punctuation">,</span> Customer <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'../entities'</span>
+
+<span class="token keyword">class</span> <span class="token class-name">MovieController</span> <span class="token punctuation">{</span>
   <span class="token keyword">private</span> movieRepo<span class="token operator">:</span> IMovieRepo<span class="token punctuation">;</span>
   <span class="token keyword">private</span> customerRepo<span class="token operator">:</span> ICustomerRepo<span class="token punctuation">;</span>
   <span class="token function">constructor</span> <span class="token punctuation">(</span><span class="token parameter">movieRepo<span class="token operator">:</span> IMovieRepo<span class="token punctuation">,</span> customerRepo<span class="token operator">:</span> ICustomerRepo</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -164,7 +170,6 @@ something like this:</p>
     <span class="token comment">// Returns movie and costomer entity objects via mappers</span>
     <span class="token keyword">const</span> movie<span class="token operator">:</span> Movie <span class="token operator">=</span> <span class="token keyword">await</span> movieRepo<span class="token punctuation">.</span><span class="token function">findById</span><span class="token punctuation">(</span>movieId<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> customer<span class="token operator">:</span> Customer <span class="token operator">=</span> <span class="token keyword">await</span> customerRepo<span class="token punctuation">.</span><span class="token function">findById</span><span class="token punctuation">(</span>customerId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>movie<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">fail</span><span class="token punctuation">(</span><span class="token string">'Movie not found'</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
@@ -184,12 +189,11 @@ something like this:</p>
       <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
-<p>So what is the difference? The controller does not implement any business rules, instead,
-enforcing of the business rules are now implemented in the movie and customer objects. The movie
-and the customer objects are entity objects, created by the repository and mappers. I will write about repositories
-and mappers in future articles. That's why the method rentMovie, in the entity object customer, can perform it's magic,
-it knows about what and when it can rent a video. </p>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>So what is the difference? The controller does not "implement" any business rules, instead,
+enforcing of the business rules are now implemented in the movie and customer entity objects. The movie
+and the customer objects are entity objects, created by the repository and mappers. That's why the method rentMovie,
+in the entity object customer, can perform it's magic, it knows about what and when it can rent a video. </p>
 <p>When model the domain logic we want to express what it;</p>
 <ul>
 <li>can do,</li>
