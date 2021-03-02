@@ -108,8 +108,8 @@ the user to verify the registration.</p>
 a verification email. The email verification system will in a soon future be replaced with a message
 infrastructure.</p>
 <h2>Register User - implementing the domain model</h2>
-<p>Time to focus on the implementation of the domain model based derived from the business requirements and using
-Domain-Driven Design software artifacts.</p>
+<p>Time to focus on the implementation of the domain model derived from the business requirements expressed in the use case
+and, using Domain-Driven Design software artifacts.</p>
 <p>In our use case, the aggregate root for the domain is the User object. The interface of the User will be expressed
 as a Typescript interface and have the following shape;</p>
 <div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IUserProps</span> <span class="token punctuation">{</span>
@@ -170,9 +170,8 @@ in the constructor can be done but is not elegant and sometimes the creation of 
 (expressed as props) may need an async function and that is not possible/recommended. For example, I do not store the plain
 text of the password in the UserCredential value object - instead I store the salted and hashed
 password. Salt and hash a password should in Node.js be implemented as an async function.</p>
-<p>The other objects - UserCredential and UserEmail - belongs to the User object follows the same
-implementation design and, I do not provide code examples, they do provide a public static factory method and uses
-private constructors as well. </p>
+<p>The other objects - UserCredential and UserEmail - follows the same implementation design and, I do not provide code
+examples, they do provide a public static factory method and uses private constructors as well. </p>
 <p>As you can see, this way we can implement the business requirements from the use case
 description;</p>
 <ul>
@@ -310,6 +309,8 @@ here they are:</p>
     <span class="token keyword">this</span><span class="token punctuation">.</span>eventType <span class="token operator">=</span> <span class="token keyword">type</span>
  <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>The aggregate root inherits from the abstract class Entity and, the User object is extended to contain the methods for
+domain events from the AggregateRoot.</p>
 <p>So far we have implemented the domain logic to the use case of register a user based on the business
 requirements but what about the use case implementation?</p>
 <h2>Register User - implementing the use case</h2>
@@ -383,7 +384,7 @@ the application layer of Domain-Driven Design.</p>
   <span class="token punctuation">}</span>
 
   <span class="token comment">/**
-   * Implementation of the use case command
+   * Implementation of the use case
    * @param createUserDTO
    */</span>
   <span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token function">executeCommand</span><span class="token punctuation">(</span>createUserDTO<span class="token operator">:</span> ICreateUserDTO<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Promise</span><span class="token operator">&lt;</span>CreateUserResponse<span class="token operator">></span> <span class="token punctuation">{</span>
@@ -410,7 +411,7 @@ the application layer of Domain-Driven Design.</p>
 
       <span class="token comment">// Check if user already exist and if so validate according to our business rules</span>
       <span class="token comment">// Pay attention to that we are searching for an existing user with username and email</span>
-      <span class="token comment">// combined in a unique index in the database</span>
+      <span class="token comment">// combined in a unique index in the database.</span>
       <span class="token keyword">let</span> foundUser<span class="token operator">:</span> User <span class="token operator">=</span> <span class="token operator">&lt;</span>User<span class="token operator">></span><span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>userRepo<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> email<span class="token punctuation">)</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>foundUser<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         
@@ -419,24 +420,27 @@ the application layer of Domain-Driven Design.</p>
           <span class="token keyword">return</span> <span class="token function">left</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CreateUserErrors</span><span class="token punctuation">.</span><span class="token function">UserIsMarkedForDeletion</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> CreateUserResponse
         <span class="token punctuation">}</span>
         
-        <span class="token comment">// The user existed adn the username is already taken</span>
+        <span class="token comment">// The user existed but the username is already taken</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>foundUser<span class="token punctuation">.</span>username<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
           <span class="token keyword">return</span> <span class="token function">left</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CreateUserErrors</span><span class="token punctuation">.</span><span class="token function">UsernameTaken</span><span class="token punctuation">(</span>username<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> CreateUserResponse
         <span class="token punctuation">}</span>
 
-        <span class="token comment">// The user existed and the email address existed</span>
+        <span class="token comment">// The user existed but the email address existed</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>foundUser<span class="token punctuation">.</span>email<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>email<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
           <span class="token keyword">return</span> <span class="token function">left</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CreateUserErrors</span><span class="token punctuation">.</span><span class="token function">EmailAlreadyExists</span><span class="token punctuation">(</span>email<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> CreateUserResponse
         <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
 
       <span class="token comment">// The User does not exists - create a User object</span>
+      <span class="token comment">// We know as well the factory method of the User object creates a domain event</span>
       <span class="token keyword">const</span> isValidUser<span class="token operator">:</span> Result<span class="token operator">&lt;</span>User<span class="token operator">></span> <span class="token operator">=</span> User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">{</span> username<span class="token punctuation">,</span> email<span class="token punctuation">,</span> credential <span class="token punctuation">}</span><span class="token punctuation">)</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>isValidUser<span class="token punctuation">.</span>isFailure<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> <span class="token function">left</span><span class="token punctuation">(</span>Result<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">fail</span><span class="token generic class-name"><span class="token operator">&lt;</span>User<span class="token operator">></span></span></span><span class="token punctuation">(</span>isValidUser<span class="token punctuation">.</span>error<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> CreateUserResponse
       <span class="token punctuation">}</span>
 
-      <span class="token comment">// The User object is valid - get it</span>
+      <span class="token comment">// The User object is valid and contains consisted data and a domain event.</span>
+      <span class="token comment">// The user object is an aggregate root and only aggregate roots are allowed to</span>
+      <span class="token comment">// contain domain events. Domain events should never cross the transaction boundary </span>
       user <span class="token operator">=</span> isValidUser<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
       <span class="token comment">// Save the user</span>
@@ -446,6 +450,11 @@ the application layer of Domain-Driven Design.</p>
       <span class="token comment">// If user where saved properly - dispatch all events for the aggregate root</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>isSaved<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         DomainEvents<span class="token punctuation">.</span><span class="token function">dispatchEventsForAggregate</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>id<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// We could clear the created domain event, but we may also create </span>
+        <span class="token comment">// another domain even informing that an attempt to create a user</span>
+        <span class="token comment">// failed</span>
+        user<span class="token punctuation">.</span><span class="token function">clearDomainEvent</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
       <span class="token punctuation">}</span>
 
       <span class="token comment">// Return void since the use case is a command</span>
@@ -454,7 +463,7 @@ the application layer of Domain-Driven Design.</p>
       <span class="token keyword">return</span> <span class="token function">left</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">AppError</span><span class="token punctuation">.</span><span class="token function">UnexpectedError</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> CreateUserResponse
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <h1>Summary</h1>
 <p>In this article I have continue put a focus on the ubiquitous language and how important it is to be able
 to model business requirements with a focus on bounded context in order to design great unified domain models.</p>
