@@ -140,11 +140,11 @@ example.</p>
 <p>My implementation of the value object I'm using in my journey to learn more about Domain-Driven Design took
 some time for me to create since I needed to understand the basics about Typescript.</p>
 <p>The value object implementation:</p>
-<div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">IValueObjectProps</span> <span class="token punctuation">{</span>
+<div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">ValueObjectProps</span> <span class="token punctuation">{</span>
   <span class="token punctuation">[</span>index<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">]</span><span class="token operator">:</span> <span class="token builtin">any</span>
 <span class="token punctuation">}</span>
 
-<span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">ValueObject<span class="token operator">&lt;</span><span class="token constant">T</span> <span class="token keyword">extends</span> IValueObjectProps<span class="token operator">></span></span> <span class="token punctuation">{</span>
+<span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">ValueObject<span class="token operator">&lt;</span><span class="token constant">T</span> <span class="token keyword">extends</span> ValueObjectProps<span class="token operator">></span></span> <span class="token punctuation">{</span>
   <span class="token keyword">public</span> props<span class="token operator">:</span> <span class="token constant">T</span>
   <span class="token keyword">private</span> <span class="token keyword">constructor</span><span class="token punctuation">(</span>props<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>props <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -154,20 +154,20 @@ some time for me to create since I needed to understand the basics about Typescr
 <span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>As the name indicate I'm using it for objects and that means it can be viewed as a dictionary type.
 Remember objects in JavaScript can take arbitrary properties, which map to corresponding values</p>
-<p>The value objects own properties (props) interface (IValueObjectProps) is an indexable interface returning
-the type any.</p>
-<p>The class own properties (props) has been declared as a generic type, and the properties (props) passed into
-the constructor has also been declared as generic type. </p>
+<p>The class own properties (props) has been declared as a generic type T, and the properties (props) passed into
+the constructor has also been declared as generic type T. </p>
 <p>The class itself has been declared as an abstract class and abstract classes are base classes from which other
 classes may be derived. They may not be instantiated directly. Unlike an interface, an abstract class may
 contain implementation details for its members.</p>
+<p>The class explicit declare its own type via the generic variable T which extends the indexable type
+ValueObjectProps.</p>
 <p>How do I used it?</p>
 <div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">ValueObjectProps</span> <span class="token punctuation">{</span>
   <span class="token punctuation">[</span>index<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">]</span><span class="token operator">:</span> <span class="token builtin">any</span>
 <span class="token punctuation">}</span>
 
 <span class="token keyword">export</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">ValueObject<span class="token operator">&lt;</span><span class="token constant">T</span> <span class="token keyword">extends</span> ValueObjectProps<span class="token operator">></span></span> <span class="token punctuation">{</span>
-  <span class="token keyword">protected</span> props<span class="token operator">:</span> <span class="token constant">T</span>
+  <span class="token keyword">public</span> props<span class="token operator">:</span> <span class="token constant">T</span>
   <span class="token keyword">protected</span> <span class="token keyword">constructor</span><span class="token punctuation">(</span>props<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>props <span class="token operator">=</span> <span class="token punctuation">{</span>
       <span class="token operator">...</span>props<span class="token punctuation">,</span>
@@ -204,14 +204,15 @@ contain implementation details for its members.</p>
 <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span>
 <span class="token comment">// Henrik</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <p>First, we can see the UserName class inherits from the abstract class ValueObject, and we passed the UserName
-own property interface (UserNameProps) to the type variable T in the ValueObject class. The type variable T
-extends the value objects onw properties (ValueObjectProps), which consist of an indexable signature and
-returns any type. You can think about it that we have now named the allowed properties to the value object own
-property interface. The allowed property name is now username for the ValueObjects indexable interface.</p>
+own interface (UserNameProps) to the type variable T in the ValueObject class. The type variable T
+in the ValueObject extends the indexable interface (ValueObjectProps), which consist of an indexable signature
+and returns type any. You can think about it that we have now named the allowed properties to the indexable
+interface ValueObjectProps. The allowed property name is now username for the indexable interface
+ValueObjectProps.</p>
 <p>The parameters to the constructor of the UserName class accepts only the declaration of its own interface
 (UserNameProps) which also only accept a property named username with a return type of string.</p>
-<p>When we instantiate a new UserName object, the actual value is stored in the ValueObject own properties
-(props) which can be accessed by getter or setter methods in the UserName instance. Now it is up to the
+<p>When we instantiate a new UserName object, the actual value is stored in the ValueObject own variable props
+which can be accessed by getter or setter methods in the sub-class UserName instance. Now it is up to the
 developer to design getters and setters for the value object they create.</p>
 <p>Note that I have declared the constructor of the value object as protected and thus it is only available
 for derived classes. I have also left out the equality comparison method implemented in the ValueObject class.
