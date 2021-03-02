@@ -219,6 +219,17 @@ In Domain-Driven Design value object are treated as equal by their value of the 
 <p>Another design issue I have not decided on is if the value objects own properties should be declared
 protected or public. If they are protected, the derived class must implement getters and setters for all
 of them, if they are declared public the developer can access them without getters or setters. </p>
+<p>Here is why I like the indexable types and its power. A pure bonus:</p>
+<div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token comment">// Defining reusable indexable type</span>
+<span class="token keyword">interface</span> <span class="token class-name">States</span> <span class="token punctuation">{</span>
+  <span class="token punctuation">[</span>state<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">]</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> moodStates<span class="token operator">:</span> States <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'isHungry'</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token string">'mustCookFood'</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">}</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>moodStates<span class="token punctuation">.</span>isHungry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>moodStates<span class="token punctuation">.</span>mustCookFood<span class="token punctuation">)</span>
+  <span class="token comment">// false</span>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
 <h2>Summary</h2>
 <p>That's all for now, I'm not an expert of Typescript, I think it has some nice features, I like especially
 the ide of coding against an interface and using interfaces for dependency injection. </p>
