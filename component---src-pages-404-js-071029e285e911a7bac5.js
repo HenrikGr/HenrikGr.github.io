@@ -1,0 +1,3 @@
+/*! For license information please see component---src-pages-404-js-071029e285e911a7bac5.js.LICENSE.txt */
+(self.webpackChunkhgc_ab=self.webpackChunkhgc_ab||[]).push([[883],{9616:function(e,t,a){"use strict";a.r(t);var n=a(7294),c=a(8266),l=a(453),r=a(6501),i=a(125);t.default=function(e){var t=e.location,a=e.navigate,o=(0,i.Z)();return n.createElement(n.Fragment,null,n.createElement(r.Z,{title:"Opps - page not found",siteMeta:o,location:t,navigate:a}),n.createElement(c.Z,{clone:!0,pt:16,pr:2,pb:2,pl:2},n.createElement(l.Z,{variant:"h5",color:"inherit"},"Opps, You hit a page that does not exist")))}}}]);
+//# sourceMappingURL=component---src-pages-404-js-071029e285e911a7bac5.js.map

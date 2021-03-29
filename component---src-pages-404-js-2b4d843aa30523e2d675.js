@@ -1,3 +1,0 @@
-/*! For license information please see component---src-pages-404-js-2b4d843aa30523e2d675.js.LICENSE.txt */
-(window.webpackJsonp=window.webpackJsonp||[]).push([[7],{w2l6:function(e,t,a){"use strict";a.r(t);var n=a("q1tI"),o=a.n(n),i=a("hlFM"),r=a("ofer"),l=a("aDnJ"),p=a("IAH9");t.default=function(e){var t=e.location,a=e.navigate,n=Object(p.a)();return o.a.createElement(o.a.Fragment,null,o.a.createElement(l.a,{title:"Opps - page not found",siteMeta:n,location:t,navigate:a}),o.a.createElement(i.a,{clone:!0,pt:16,pr:2,pb:2,pl:2},o.a.createElement(r.a,{variant:"h5",color:"inherit"},"Opps, You hit a page that does not exist")))}}}]);
-//# sourceMappingURL=component---src-pages-404-js-2b4d843aa30523e2d675.js.map
