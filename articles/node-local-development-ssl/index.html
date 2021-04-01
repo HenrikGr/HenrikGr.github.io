@@ -42,7 +42,7 @@ secure requests from your machine. Do not share it.</p>
 </blockquote>
 <p>It is also important to know that Node.js comes as mentioned earlier bundled with common used CA root
 certificates and thus does not use the system root store, so it won't accept mkcert certificates
-automatically. Instead, you will have to set the NODE<em>EXTRA</em>CA_CERTS environment variable.</p>
+automatically. Instead, you will have to set the NODE_EXTRA_CA_CERTS environment variable.</p>
 <p>With all this in mind, when you want to set up your local development computer to use *.example.com domain
 names and run your Node.js with HTTP/SSL, you can do this after installation of mkcert.</p>
 <p>Edit your host file located in \Windows\System32\drivers\hosts, you need to map the ip address 127.0.0.1
