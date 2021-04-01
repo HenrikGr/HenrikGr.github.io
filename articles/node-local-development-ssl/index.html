@@ -14,8 +14,8 @@ the session keys. Most of the time, these errors are thrown because the client i
 server certificate because the server certificate is self-signed. The solution to this is to specify the
 CA certificate that is expected from the server. In other words, the common name of the certificate needs
 to match with the server certificate.</p>
-<p>In Node.js you can do this by the environment variable NODE<em>EXTRA</em>CA<em>CERTS. From Node version 7.3.0,
-NODE</em>EXTRA<em>CA</em>CERTS environment variable is introduced to pass in a CA certificate file. This allows the
+<p>In Node.js you can do this by the environment variable NODE_EXTRA_CA_CERTS. From Node version 7.3.0,
+NODE_EXTRA_CA_CERTS environment variable is introduced to pass in a CA certificate file. This allows the
 “root” CAs to be extended with the extra certificates. The file should consist of one or more trusted
 certificates in PEM format.</p>
 <p>I was also investigating an OICD Provider package in order to play with Open ID Connect and realized I
